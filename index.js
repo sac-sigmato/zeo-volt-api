@@ -8,7 +8,7 @@ const port = 3000;
 // MongoDB connection
 mongoose
   .connect(
-    "mongodb+srv://sac:Nj0TAMEizpoJ08wN@cluster0.cbtzzrk.mongodb.net/zeo-volt"
+    process.env.MONGODB_URI
   )
   .then(() => {
     console.log("Connected to MongoDB");
