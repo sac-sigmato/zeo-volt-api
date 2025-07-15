@@ -107,3 +107,71 @@ exports.updateUserDetails = async (req, res) => {
     res.status(500).json({ error: "Failed to update user details" });
   }
 };
+const Project = require("../models/project.model");
+
+exports.getUserProjects = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const projects = await Project.find({ user: userId });
+    res.json({ projects });
+  } catch (error) {
+    console.error("Get projects error:", error);
+    res.status(500).json({ error: "Failed to fetch projects" });
+  }
+};
+const Document = require("../models/document.model");
+
+exports.getUserDocuments = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const documents = await Document.find({ user: userId });
+    res.json({ documents });
+  } catch (error) {
+    console.error("Get documents error:", error);
+    res.status(500).json({ error: "Failed to fetch documents" });
+  }
+};
+const Loyalty = require("../models/loyalty.model");
+
+exports.getLoyaltyPoints = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const points = await Loyalty.findOne({ user: userId });
+    res.json({ points });
+  } catch (error) {
+    console.error("Get loyalty error:", error);
+    res.status(500).json({ error: "Failed to fetch loyalty points" });
+  }
+};
+const Referral = require("../models/referral.model");
+
+exports.submitReferral = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { name, phone, email } = req.body;
+
+    const referral = new Referral({
+      referredBy: userId,
+      name,
+      phone,
+      email,
+      status: "Pending",
+    });
+
+    await referral.save();
+    res.json({ message: "Referral submitted successfully", referral });
+  } catch (error) {
+    console.error("Submit referral error:", error);
+    res.status(500).json({ error: "Failed to submit referral" });
+  }
+};
+exports.getReferrals = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const referrals = await Referral.find({ referredBy: userId });
+    res.json({ referrals });
+  } catch (error) {
+    console.error("Get referrals error:", error);
+    res.status(500).json({ error: "Failed to fetch referrals" });
+  }
+};
